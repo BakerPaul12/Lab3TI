@@ -10,7 +10,7 @@
 <jsp:include page="header.jsp" />
 <div class="container">
     <jsp:include page="left-panel.jsp" />
-    <jsp:include page="left-calculator.jsp"/>
+    <jsp:include page="right-calculator.jsp"/>
 </div>
 <jsp:include page="footer.jsp" />
 <script src="${pageContext.request.contextPath}/scripts/calculator.js"></script>
