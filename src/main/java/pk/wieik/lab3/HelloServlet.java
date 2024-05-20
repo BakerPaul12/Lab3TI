@@ -13,7 +13,7 @@ public class HelloServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         loginDelivery(request, response);
     }
 
@@ -27,22 +27,22 @@ public class HelloServlet extends HttpServlet {
             session.setAttribute("username", username);
             session.setAttribute("isAdmin", true);
             session.setMaxInactiveInterval(30 * 60);
-            response.sendRedirect("Logged.html");
+            response.sendRedirect("Logged");
             System.out.println("Admin logged in");
         } else if (isValidUser(username, password)) {
             HttpSession session = request.getSession();
             session.setAttribute("username", username);
             session.setMaxInactiveInterval(30 * 60);
-            response.sendRedirect("Logged.html");
+            response.sendRedirect("Logged");
             System.out.println("User logged in");
         } else if (logout != null) {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
-            response.sendRedirect("index.html");
+            response.sendRedirect("index");
         } else {
-            response.sendRedirect("index.html?error=true");
+            response.sendRedirect("index?error=true");
         }
     }
 
@@ -58,12 +58,13 @@ public class HelloServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         String uri = request.getRequestURI();
+
         String page = "/WEB-INF/jsp/index.jsp";
-        if (uri.endsWith("calculator.html")) {
+        if (uri.endsWith("calculator")) {
             page = "/WEB-INF/jsp/calculator.jsp";
-        } else if (uri.endsWith("Logged.html")) {
+        } else if (uri.endsWith("Logged")) {
             page = "/WEB-INF/jsp/logged.jsp";
-        } else if (uri.endsWith("userpage.html")) {
+        } else if (uri.endsWith("userpage")) {
             page = "/WEB-INF/jsp/userpage.jsp";
         }
 
@@ -141,8 +142,8 @@ public class HelloServlet extends HttpServlet {
                 "    </label>\n" +
                 "    <input type=\"checkbox\" id=\"checkboxMenu\" style=\"visibility: hidden;\">\n" +
                 "    <div class=\"button-container\">\n" +
-                "        <a href=\"index.html\" class=\"button\">Home</a>\n" +
-                "        <a href=\"calculator.html\" class=\"button\">Calculator</a>\n" +
+                "        <a href=\"index\" class=\"button\">Home</a>\n" +
+                "        <a href=\"calculator\" class=\"button\">Calculator</a>\n" +
                 "        <a href=\"http://google.pl\" class=\"button\">Google</a>\n" +
                 "    </div>\n" +
                 "</div>\n" +
@@ -195,9 +196,9 @@ public class HelloServlet extends HttpServlet {
                 "    </label>\n" +
                 "    <input type=\"checkbox\" id=\"checkboxMenu\" style=\"visibility: hidden;\">\n" +
                 "    <div class=\"button-container\">\n" +
-                "        <a href=\"Logged.html\" class=\"button\">User Home</a>\n" +
-                "        <a href=\"index.html\" class=\"button\">Home</a>\n" +
-                "        <a href=\"calculator.html\" class=\"button\">Calculator</a>\n" +
+                "        <a href=\"Logged\" class=\"button\">User Home</a>\n" +
+                "        <a href=\"index\" class=\"button\">Home</a>\n" +
+                "        <a href=\"calculator\" class=\"button\">Calculator</a>\n" +
                 "        <a href=\"http://google.pl\" class=\"button\">Google</a>\n" +
                 "    </div>\n" +
                 "</div>\n" +
