@@ -59,12 +59,11 @@ public class HelloServlet extends HttpServlet {
 
         // Odczytaj ciasteczka
         Cookie[] cookies = request.getCookies();
-        String lastVisitedPage = null;
-
+        String lastPage = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("lastSite".equals(cookie.getName())) {
-                    lastVisitedPage = cookie.getValue();
+                    lastPage = cookie.getValue();
                     break;
                 }
             }
@@ -74,12 +73,12 @@ public class HelloServlet extends HttpServlet {
         String uri = request.getRequestURI();
         String page = "/WEB-INF/jsp/index.jsp"; // Domyślna strona
 
-        // Jeśli użytkownik odwiedza stronę główną, a ciasteczko istnieje, przekieruj do strony zapisanej w ciasteczku
-        if (uri.equals("/Lab3-1.0-SNAPSHOT/") && lastVisitedPage != null && !lastVisitedPage.equals("/Lab3-1.0-SNAPSHOT/")) {
-            uri = lastVisitedPage;
+        // Jeśli użytkownik odwiedza stronę główną ciasteczko istnieje, przekieruj do strony zapisanej w ciasteczku
+        if (uri.equals("/Lab3-1.0-SNAPSHOT/") && lastPage != null && !lastPage.equals("/Lab3-1.0-SNAPSHOT/")) {
+            uri = lastPage;
         }
 
-        // Wybierz stronę na podstawie aktualnego (lub zmodyfikowanego przez ciasteczko) URI
+        // Wybierz stronę na podstawie aktualnego uri
         if (uri.endsWith("calculator")) {
             page = "/WEB-INF/jsp/calculator.jsp";
         } else if (uri.endsWith("Logged")) {
@@ -88,9 +87,9 @@ public class HelloServlet extends HttpServlet {
             page = "/WEB-INF/jsp/userpage.jsp";
         }
 
-        // Ustaw aktualny URI jako wartość ciasteczka
+        // Ustaw aktualny uri jako wartość ciasteczka
         Cookie lastSite = new Cookie("lastSite", uri);
-        lastSite.setMaxAge(24 * 60 * 60); // 24 godziny
+        lastSite.setMaxAge(60 * 60);
         response.addCookie(lastSite);
 
         // Przygotuj atrybuty dla JSP
