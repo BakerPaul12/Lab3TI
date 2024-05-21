@@ -57,9 +57,29 @@ public class HelloServlet extends HttpServlet {
     private void URLdelivery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        String uri = request.getRequestURI();
+        // Odczytaj ciasteczka
+        Cookie[] cookies = request.getCookies();
+        String lastVisitedPage = null;
 
-        String page = "/WEB-INF/jsp/index.jsp";
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("lastSite".equals(cookie.getName())) {
+                    lastVisitedPage = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        // Pobierz URI żądania
+        String uri = request.getRequestURI();
+        String page = "/WEB-INF/jsp/index.jsp"; // Domyślna strona
+
+        // Jeśli użytkownik odwiedza stronę główną, a ciasteczko istnieje, przekieruj do strony zapisanej w ciasteczku
+        if (uri.equals("/Lab3-1.0-SNAPSHOT/") && lastVisitedPage != null && !lastVisitedPage.equals("/Lab3-1.0-SNAPSHOT/")) {
+            uri = lastVisitedPage;
+        }
+
+        // Wybierz stronę na podstawie aktualnego (lub zmodyfikowanego przez ciasteczko) URI
         if (uri.endsWith("calculator")) {
             page = "/WEB-INF/jsp/calculator.jsp";
         } else if (uri.endsWith("Logged")) {
@@ -68,6 +88,12 @@ public class HelloServlet extends HttpServlet {
             page = "/WEB-INF/jsp/userpage.jsp";
         }
 
+        // Ustaw aktualny URI jako wartość ciasteczka
+        Cookie lastSite = new Cookie("lastSite", uri);
+        lastSite.setMaxAge(24 * 60 * 60); // 24 godziny
+        response.addCookie(lastSite);
+
+        // Przygotuj atrybuty dla JSP
         String cssLink = determineCssLink(request, response);
         String username = getLoggedUserName(request);
         String dynamicContentArticle = getDynamicContent();
@@ -89,6 +115,8 @@ public class HelloServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher(page);
         dispatcher.forward(request, response);
     }
+
+
 
     private String determineCssLink(HttpServletRequest request, HttpServletResponse response) {
         String themeParam = request.getParameter("theme");
